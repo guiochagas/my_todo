@@ -1,8 +1,21 @@
 import sqlite3
 from time import sleep
 
-# CRIAR TABELA
+# CONEXÃO GLOBAL COM O BANCO DE DADOS 
+conexao = sqlite3.connect('to-do-database.db')
+c = conexao.cursor()
 
+# RENUMERAR IDS DO BANCO DE DADOS
+def renumerar_ids():
+    c.execute("SELECT id FROM tasks ORDER BY id")
+    ids = c.fetchall()
+
+    for i, (id,) in enumerate(ids, start=1):
+        c.execute("UPDATE tasks SET id = ? WHERE id = ?", (i, id))
+    
+    conexao.commit()
+
+# CRIAR TABELA
 def criar_tabela():
     conexao = sqlite3.connect('to-do-database.db')
     c = conexao.cursor()
@@ -45,9 +58,10 @@ def exibir_tarefa():
     cont = 1
 
     for dado in dados:
-        print(f'TAREFA {cont}: {dado[1]} - STATUS: {dado[2]}')
+        print(f'TAREFA {cont}: {dado[1]}')
         cont += 1
     
+    sleep(1)
     print()
 
     conexao.close()
@@ -64,9 +78,21 @@ def atualizar_tarefa():
     conexao.close()
 
 
+def excluir_tarefa(tarefa_excluida):
+    c.execute("DELETE FROM tasks WHERE id = ?", (tarefa_excluida,))
+
+    print('Excluindo tarefa...')
+    sleep(1)
+    print('Tarefa excluida com sucesso!')
+    sleep(1)
+
+    conexao.commit()
+
 
 # USER EXPERIENCE
 while True:
+    renumerar_ids()
+    
     print()
     print(f"""{'== COMANDOS ==':^22}
 [1] - INSERIR TAREFA
@@ -76,16 +102,35 @@ while True:
 [5] - SAIR
 {'='*23}""")
     
+    
+
     user = int(input('Selecione uma opção:\n'))
     print()
 
+    # INSERIR
     if user == 1:
         tarefa = str(input('NOVA TAREFA: '))
         inserir_tarefa(tarefa)
 
+    # EXIBIR
     elif user == 2:
         exibir_tarefa()
 
+    # ATUALIZAR
     elif user == 3:
         atualizar_tarefa()
         alterar = int(input('Selecione uma tarefa para alterar:\n'))
+
+    # DELETAR
+    elif user == 4:
+        exibir_tarefa()
+        user_delete = int(input('Selecione uma tarefa para excluir: '))
+        excluir_tarefa(user_delete)
+
+    # ENCERRAR PROGRAMA
+    elif user == 5:
+        print('ENCERRANDO...')
+        sleep(1)
+        print('Até a próxima')
+        sleep(1)
+        break
