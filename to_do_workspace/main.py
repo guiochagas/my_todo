@@ -68,14 +68,14 @@ def exibir_tarefa():
 
 
 #ATUALIZAR TAREFA
-def atualizar_tarefa():
-    exibir_tarefa()
-
-    conexao = sqlite3.connect('to-do-database.db')
+def atualizar_tarefa(id_selecionado, tarefa_alterada):
     c = conexao.cursor()
-    c.execute("UPDATE tasks SET tarefa = {tarefa_alterada} WHERE id = {id_selecionado}")
+    c.execute("UPDATE tasks SET tarefa = ? WHERE id = ?", (tarefa_alterada, id_selecionado))
+
+    sleep(1)
+    print('Tarefa atualizada com sucesso!')
+    sleep(1)
     conexao.commit()
-    conexao.close()
 
 
 def excluir_tarefa(tarefa_excluida):
@@ -92,7 +92,7 @@ def excluir_tarefa(tarefa_excluida):
 # USER EXPERIENCE
 while True:
     renumerar_ids()
-    
+
     print()
     print(f"""{'== COMANDOS ==':^22}
 [1] - INSERIR TAREFA
@@ -118,8 +118,10 @@ while True:
 
     # ATUALIZAR
     elif user == 3:
-        atualizar_tarefa()
-        alterar = int(input('Selecione uma tarefa para alterar:\n'))
+        exibir_tarefa()
+        id_tarefa = int(input('Selecione uma tarefa para alterar:\n'))
+        alteracao = str(input('Alteração: '))
+        atualizar_tarefa(id_tarefa, alteracao)
 
     # DELETAR
     elif user == 4:
