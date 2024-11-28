@@ -1,2 +1,2 @@
 # my_todo
-Minha primeira tentativa de desenvolver um app. A ideia é utilizar Python, SQLite e Flet.
+Desenvolvendo uma aplicação com o objetivo de colocar em prática meus conhecimentos em Python, SQLite e Flet.
