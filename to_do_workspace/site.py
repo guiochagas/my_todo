@@ -3,7 +3,7 @@ from flask import Flask
 app = Flask(__name__)
 
 
-@site.route("/")
+@app.route("/")
 def homepage():
     return "Página inicial"
 
