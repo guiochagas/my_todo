@@ -15,6 +15,7 @@ def renumerar_ids():
     
     conexao.commit()
 
+
 # CRIAR TABELA
 def criar_tabela():
     conexao = sqlite3.connect('to-do-database.db')
