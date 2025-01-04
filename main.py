@@ -5,16 +5,6 @@ from time import sleep
 conexao = sqlite3.connect('to-do-database.db')
 c = conexao.cursor()
 
-# RENUMERAR IDS DO BANCO DE DADOS
-def renumerar_ids():
-    c.execute("SELECT id FROM tasks ORDER BY id")
-    ids = c.fetchall()
-
-    for i, (id,) in enumerate(ids, start=1):
-        c.execute("UPDATE tasks SET id = ? WHERE id = ?", (i, id))
-    
-    conexao.commit()
-
 
 # CRIAR TABELA
 def criar_tabela():
@@ -90,8 +80,20 @@ def excluir_tarefa(tarefa_excluida):
     conexao.commit()
 
 
+# RENUMERAR IDS DO BANCO DE DADOS
+def renumerar_ids():
+    c.execute("SELECT id FROM tasks ORDER BY id")
+    ids = c.fetchall()
+
+    for i, (id,) in enumerate(ids, start=1):
+        c.execute("UPDATE tasks SET id = ? WHERE id = ?", (i, id))
+    
+    conexao.commit()
+
+
 # USER EXPERIENCE
 while True:
+    criar_tabela()
     renumerar_ids()
 
     print()
